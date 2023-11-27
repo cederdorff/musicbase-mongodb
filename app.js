@@ -68,6 +68,6 @@ app.get("/artists/:id", async (request, response) => {
 // POST Endpoint "/artists" - create one artist
 app.post("/artists", async (request, response) => {
     const artist = new Artist(request.body);
-    await artist.save();
-    response.json(artist);
+    const result = await artist.save();
+    response.json(result);
 });
