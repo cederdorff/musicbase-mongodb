@@ -7,7 +7,8 @@ import { getDatabase } from "./db-connect.js";
 const app = express();
 const port = process.env.SERVER_PORT || 3333;
 app.use(express.json()); // to parse JSON bodies
-app.use(cors());
+app.use(cors()); // to allow Cross-Origin Resource Sharing (CORS)
+const db = await getDatabase(); // Connect to the database
 
 // GET Endpoint "/"
 app.get("/", (request, response) => {
@@ -20,7 +21,6 @@ app.listen(port, async () => {
 
 // GET Endpoint "/artists" - get all artists
 app.get("/artists", async (request, response) => {
-    const db = await getDatabase();
     const artists = await db.collection("artists").find().toArray(); // Use toArray() to retrieve documents as an array
     response.json(artists);
 });
