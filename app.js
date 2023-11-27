@@ -31,15 +31,17 @@ app.get("/artists/:id", async (request, response) => {
     // ...
 });
 
-// GET Endpoint "/artists/:id" - get one artist
+// GET Endpoint "/artists/:id/albums" - get all albums for one artist
 app.get("/artists/:id/albums", async (request, response) => {
     // ...
 });
 
+// GET Endpoint "/albums" - get all albums
 app.get("/albums", async (request, response) => {
     // ...
 });
 
+// GET Endpoint "/songs" - get all songs
 app.get("/songs", async (request, response) => {
     // ...
 });
