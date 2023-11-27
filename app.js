@@ -1,14 +1,49 @@
 // ========== IMPORTS ========== //
 import cors from "cors";
 import express from "express";
-import { getDatabase } from "./db-connect.js";
+import { initMongoose } from "./db-connect.js";
+import mongoose from "mongoose";
 
 // ========== APP SETUP ========== //
 const app = express();
 const port = process.env.SERVER_PORT || 3333;
 app.use(express.json()); // to parse JSON bodies
 app.use(cors());
+initMongoose();
 
+// ========== SCHEMAS & MODELS ========== //
+
+const artistSchema = new mongoose.Schema({
+    name: String,
+    genre: String,
+    image: String,
+    birthdate: Date,
+    gender: String
+});
+
+const Artist = mongoose.model("Artist", artistSchema);
+
+// ========== CREATE TEST DATA ========== //
+
+const adele = new Artist({
+    name: "Adele",
+    genre: "Pop",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Adele_2016.jpg/220px-Adele_2016.jpg",
+    birthdate: new Date("1988-05-05"),
+    gender: "Female"
+});
+await adele.save();
+
+const beyonce = new Artist({
+    name: "Beyoncé",
+    genre: "Pop",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Beyonce_-_The_Formation_World_Tour%2C_2016_%28cropped%29.jpg/220px-Beyonce_-_The_Formation_World_Tour%2C_2016_%28cropped%29.jpg",
+    birthdate: new Date("1981-09-04"),
+    gender: "Female"
+});
+await beyonce.save();
+
+// ========== ENDPOINTS ========== //
 // GET Endpoint "/"
 app.get("/", (request, response) => {
     response.send("Node Express Musicbase REST API");
@@ -20,27 +55,19 @@ app.listen(port, async () => {
 
 // GET Endpoint "/artists" - get all artists
 app.get("/artists", async (request, response) => {
-    const db = await getDatabase();
-    const artists = await db.collection("artists").find().toArray(); // Use toArray() to retrieve documents as an array
+    const artists = await Artist.find();
     response.json(artists);
 });
 
 // GET Endpoint "/artists/:id" - get one artist
 app.get("/artists/:id", async (request, response) => {
-    // ...
+    const artist = await Artist.findById(request.params.id);
+    response.json(artist);
 });
 
-// GET Endpoint "/artists/:id/albums" - get all albums for one artist
-app.get("/artists/:id/albums", async (request, response) => {
-    // ...
-});
-
-// GET Endpoint "/albums" - get all albums
-app.get("/albums", async (request, response) => {
-    // ...
-});
-
-// GET Endpoint "/songs" - get all songs
-app.get("/songs", async (request, response) => {
-    // ...
+// POST Endpoint "/artists" - create one artist
+app.post("/artists", async (request, response) => {
+    const artist = new Artist(request.body);
+    await artist.save();
+    response.json(artist);
 });

@@ -1,14 +1,14 @@
-import { MongoClient } from "mongodb";
 import "dotenv/config";
+import mongoose from "mongoose";
 
-const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri);
+const uri = `${process.env.MONGODB_URI}/${process.env.DATABASE}`;
+console.log("Connecting to the database:", uri);
 
-async function getDatabase() {
+async function initMongoose() {
     try {
-        await client.connect();
-        const db = client.db(process.env.DATABASE);
-        return db;
+        const connection = await mongoose.connect(uri);
+        console.log("Connected to the database");
+        return connection;
     } catch (error) {
         console.error("Failed to connect to the database:", error);
         throw error;
@@ -17,13 +17,13 @@ async function getDatabase() {
 
 // Automatically close the database connection when the Node.js process exits
 process.on("exit", async () => {
-    await client.close();
+    await mongoose.disconnect();
 });
 
 // Handle CTRL+C events
 process.on("SIGINT", async () => {
-    await client.close();
+    await mongoose.disconnect();
     process.exit();
 });
 
-export { getDatabase };
+export { initMongoose };
