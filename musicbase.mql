@@ -257,7 +257,7 @@ db.artists.aggregate([
 
 // Aggregate to get all albums for the specified artist
 db.artists.aggregate([
-  { $match: { name: "Ed Sheeran" } },
+  { $match: { _id: "Ed Sheeran" } },
   { $unwind: "$albums" },
   {
     $project: {
