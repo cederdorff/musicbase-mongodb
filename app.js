@@ -27,6 +27,45 @@ app.get("/artists", async (request, response) => {
     response.json(artists);
 });
 
+app.post("/artists", async (request, response) => {
+    const artist = request.body;
+    const db = await getDatabase();
+    const result = await db.collection("artists").insertOne(artist);
+    response.json(result);
+});
+
+app.put("/artists/:id", async (request, response) => {
+    const id = request.params.id;
+    const artist = request.body;
+    const db = await getDatabase();
+    const result = await db
+        .collection("artists")
+        .updateOne({ _id: new ObjectId(id) }, { $set: artist });
+    response.json(result);
+});
+
+app.delete("/artists/:id", async (request, response) => {
+    const id = request.params.id;
+    const db = await getDatabase();
+    const result = await db
+        .collection("artists")
+        .deleteOne({ _id: new ObjectId(id) });
+    response.json(result);
+});
+
+app.post("/artists/:id/albums", async (request, response) => {
+    const id = request.params.id;
+    const album = request.body;
+    const db = await getDatabase();
+    const result = await db
+        .collection("artists")
+        .updateOne(
+            { _id: new ObjectId(id) },
+            { $push: { albums: album } }
+        );
+    response.json(result);
+});
+
 // GET Endpoint "/artists/search?q=taylor" - get all artists
 // Ex: http://localhost:3333/artists/search?q=cy
 app.get("/artists/search", async (request, response) => {
