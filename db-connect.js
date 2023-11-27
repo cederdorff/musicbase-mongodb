@@ -1,16 +1,29 @@
-import mysql from "mysql2"; // using mysql2 - installed npm library
+import { MongoClient } from "mongodb";
 import "dotenv/config";
 
-// using the variables from the .env file
-// and creates the connection to database
-const dbConnection = mysql.createConnection({
-    host: process.env.MYSQL_HOST,
-    port: process.env.MYSQL_PORT,
-    user: process.env.MYSQL_USER,
-    database: process.env.MYSQL_DATABASE,
-    password: process.env.MYSQL_PASSWORD,
-    multipleStatements: true
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri);
+
+async function getDatabase() {
+    try {
+        await client.connect();
+        const db = client.db(process.env.DATABASE);
+        return db;
+    } catch (error) {
+        console.error("Failed to connect to the database:", error);
+        throw error;
+    }
+}
+
+// Automatically close the database connection when the Node.js process exits
+process.on("exit", async () => {
+    await client.close();
 });
 
-// exports database connection
-export default dbConnection;
+// Handle CTRL+C events
+process.on("SIGINT", async () => {
+    await client.close();
+    process.exit();
+});
+
+export { getDatabase };

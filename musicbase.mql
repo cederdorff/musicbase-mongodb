@@ -1,0 +1,523 @@
+use music_db
+
+// Create artists collection
+db.createCollection("artists")
+
+// Insert data into artists collection
+db.artists.insertMany([
+  {
+    name: 'Adele',
+    genre: 'Pop',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/5/52/Adele_for_Vogue_in_2021.png',
+    birthdate: ISODate('1988-05-05'),
+    gender: 'Female'
+  },
+  {
+    name: 'Ed Sheeran',
+    genre: 'Pop',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Ed_Sheeran-6886_%28cropped%29.jpg/500px-Ed_Sheeran-6886_%28cropped%29.jpg',
+    birthdate: ISODate('1991-02-17'),
+    gender: 'Male'
+  },
+  {
+    name: 'Beyoncé',
+    genre: 'R&B',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png/500px-Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png',
+    birthdate: ISODate('1981-09-04'),
+    gender: 'Female'
+  },
+  {
+    name: 'Miley Cyrus',
+    genre: 'Pop',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Miley_Cyrus_Primavera19_-226_%2848986293772%29_%28cropped%29.jpg/500px-Miley_Cyrus_Primavera19_-226_%2848986293772%29_%28cropped%29.jpg',
+    birthdate: ISODate('1992-11-23'),
+    gender: 'Female'
+  },
+  {
+    name: 'Ariana Grande',
+    genre: 'Pop',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Ariana_Grande_by_Marcus_Ingvarsson_%28SWE%29_%28cropped%29.png/500px-Ariana_Grande_by_Marcus_Ingvarsson_%28SWE%29_%28cropped%29.png',
+    birthdate: ISODate('1993-06-26'),
+    gender: 'Female'
+  },
+  {
+    name: 'Drake',
+    genre: 'Rap',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Drake_2019_by_Glenn_Francis_%28cropped%29.jpg/500px-Drake_2019_by_Glenn_Francis_%28cropped%29.jpg',
+    birthdate: ISODate('1986-10-24'),
+    gender: 'Male'
+  }
+])
+
+
+db.artists.find()
+
+db.artists.createIndex({name:"text"})
+
+
+// ========== Embedded Structure - One to many ========== //
+
+// Drop the collection
+db.artists.drop(); // Drop the collection
+
+// Ed Sheeran
+db.artists.insertOne({
+  name: "Ed Sheeran",
+  genre: "Pop",
+  image: "https://example.com/ed_sheeran.jpg",
+  birthdate: new Date("1991-02-17"),
+  gender: "Male",
+  albums: [
+    {
+      _id: ObjectId(), // Generate a unique ID for the album
+      title: "Divide",
+      releaseDate: new Date("2017-03-03"),
+      cover: "https://upload.wikimedia.org/wikipedia/en/4/45/Divide_cover.png",
+      songs: [
+        {
+          _id: ObjectId(), // Generate a unique ID for the song
+          title: "Shape of You",
+          releaseDate: new Date("2017-01-06"),
+          length: "00:03:54",
+          position: 1,
+        },
+        {
+          _id: ObjectId(), // Generate a unique ID for the song
+          title: "Castle on the Hill",
+          releaseDate: new Date("2017-01-06"),
+          length: "00:04:21",
+          position: 2,
+        },
+      ],
+    },
+    {
+      _id: ObjectId(), // Generate a unique ID for the album
+      title: "Multiply",
+      releaseDate: new Date("2014-06-23"),
+      cover: "https://upload.wikimedia.org/wikipedia/en/a/ad/X_cover.png",
+      songs: [
+        {
+          _id: ObjectId(), // Generate a unique ID for the song
+          title: "Photograph",
+          releaseDate: new Date("2015-05-11"),
+          length: "00:04:18",
+          position: 1,
+        },
+      ],
+    },
+  ],
+});
+
+// Adele
+db.artists.insertMany([
+  {
+    name: "Adele",
+    genre: "Pop",
+    image: "https://example.com/adele.jpg",
+    birthdate: new Date("1988-05-05"),
+    gender: "Female",
+    albums: [
+      {
+        _id: ObjectId(),
+        title: "30",
+        releaseDate: new Date("2021-11-19"),
+        cover: "https://upload.wikimedia.org/wikipedia/en/f/f6/Adele_-_30.png",
+        songs: [
+          {
+            _id: ObjectId(),
+            title: "Easy On Me",
+            releaseDate: new Date("2021-10-15"),
+            length: "00:03:44",
+            position: 1,
+          },
+          {
+            _id: ObjectId(),
+            title: "My Little Love",
+            releaseDate: new Date("2021-11-19"),
+            length: "00:06:26",
+            position: 2,
+          },
+          {
+            _id: ObjectId(),
+            title: "Oh My God",
+            releaseDate: new Date("2021-11-19"),
+            length: "00:04:10",
+            position: 3,
+          },
+        ],
+      },
+      {
+        _id: ObjectId(),
+        title: "25",
+        releaseDate: new Date("2015-11-20"),
+        cover: "https://upload.wikimedia.org/wikipedia/en/9/96/Adele_-_25.png",
+        songs: [
+          {
+            _id: ObjectId(),
+            title: "Hello",
+            releaseDate: new Date("2015-10-23"),
+            length: "00:04:55",
+            position: 1,
+          },
+          {
+            _id: ObjectId(),
+            title: "When We Were Young",
+            releaseDate: new Date("2015-11-22"),
+            length: "00:04:51",
+            position: 2,
+          },
+        ],
+      },
+      {
+        _id: ObjectId(),
+        title: "21",
+        releaseDate: new Date("2011-01-24"),
+        cover: "https://upload.wikimedia.org/wikipedia/en/e/e9/Adele_-_21.png",
+        songs: [
+          {
+            _id: ObjectId(),
+            title: "Rolling in the Deep",
+            releaseDate: new Date("2010-11-29"),
+            length: "00:03:49",
+            position: 1,
+          },
+        ],
+      },
+    ],
+  }
+]);
+
+// Taylor Swift
+db.artists.insertOne({
+  name: "Taylor Swift",
+  genre: "Pop",
+  image: "https://example.com/taylor_swift.jpg",
+  birthdate: new Date("1989-12-13"),
+  gender: "Female",
+  albums: [
+    {
+      _id: ObjectId(),
+      title: "1989",
+      releaseDate: new Date("2014-10-27"),
+      cover: "https://upload.wikimedia.org/wikipedia/en/f/f6/Taylor_Swift_-_1989.png",
+      songs: [
+        {
+          _id: ObjectId(),
+          title: "Shake It Off",
+          releaseDate: new Date("2014-08-18"),
+          length: "00:03:39",
+          position: 1,
+        },
+        {
+          _id: ObjectId(),
+          title: "Blank Space",
+          releaseDate: new Date("2014-11-10"),
+          length: "00:03:51",
+          position: 2,
+        },
+      ],
+    },
+    {
+      _id: ObjectId(),
+      title: "Fearless",
+      releaseDate: new Date("2008-11-11"),
+      cover: "https://upload.wikimedia.org/wikipedia/en/b/b8/Taylor_Swift_-_Fearless.png",
+      songs: [
+        {
+          _id: ObjectId(),
+          title: "Love Story",
+          releaseDate: new Date("2008-09-12"),
+          length: "00:03:54",
+          position: 1,
+        },
+      ],
+    },
+  ],
+});
+
+db.artists.find()
+
+// Aggregate to get all songs for the specified artist
+db.artists.aggregate([
+  { $match: { name: "Ed Sheeran" } },
+  { $unwind: "$albums" },
+  { $unwind: "$albums.songs" },
+  {
+    $project: {
+      _id: 0,
+      artist: "$name",
+      albumTitle: "$albums.title",
+      title: "$albums.songs.title",
+      releaseDate: "$albums.songs.releaseDate",
+      length: "$albums.songs.length",
+      position: "$albums.songs.position",
+    },
+  },
+]);
+
+// Aggregate to get all albums for the specified artist
+db.artists.aggregate([
+  { $match: { name: "Ed Sheeran" } },
+  { $unwind: "$albums" },
+  {
+    $project: {
+      _id: 0,
+      artist: "$name",
+      album: "$albums.title",
+      releaseDate: "$albums.releaseDate",
+    },
+  },
+]);
+
+// Aggregate to get all albums for all artists
+db.artists.aggregate([
+  {
+    $unwind: "$albums"
+  }
+])
+
+// Aggregate to get all albums for all artists
+db.artists.aggregate([
+  {
+    $unwind: "$albums.songs"
+  }
+])
+
+// Aggregate to get all albums for all artists
+db.artists.aggregate([
+  {
+    $unwind: "$albums"
+  },
+  {
+    $project: {
+      _id: 0,
+      artist: "$name",
+      title: "$albums.title",
+      releaseDate: "$albums.releaseDate",
+      cover: "$albums.cover",
+      songs: "$albums.songs"
+    }
+  }
+])
+
+
+// Aggregate to get all songs for all albums and artists
+db.artists.aggregate([
+  {
+    $unwind: "$albums"
+  },
+  {
+    $unwind: "$albums.songs"
+  }
+])
+
+
+// Aggregate to get all songs for all albums and artists
+db.artists.aggregate([
+  {
+    $unwind: "$albums"
+  },
+  {
+    $unwind: "$albums.songs"
+  },
+  {
+    $project: {
+      _id: 0,
+      artist: "$name",
+      albumTitle: "$albums.title",
+      albumCover: "$albums.cover",
+      songTitle: "$albums.songs.title",
+      songReleaseDate: "$albums.songs.releaseDate",
+      songLength: "$albums.songs.length",
+      songPosition: "$albums.songs.position"
+    }
+  }
+])
+
+
+
+// ========== Linked Structure - One to many ========== //
+
+db.artists.drop(); // Drop the collection
+
+// Taylor Swift
+const taylorResult = db.artists.insertOne({
+  name: "Taylor Swift",
+  genre: "Pop",
+  image: "https://example.com/taylor_swift.jpg",
+  birthdate: new Date("1989-12-13"),
+  gender: "Female",
+});
+
+// 1989
+const album1989Result = db.albums.insertOne({
+  artistId: taylorResult.insertedId,
+  title: "1989",
+  releaseDate: new Date("2014-10-27"),
+  cover: "https://upload.wikimedia.org/wikipedia/en/f/f6/Taylor_Swift_-_1989.png",
+});
+
+// Fearless
+const albumFearlessResult = db.albums.insertOne({
+  artistId: taylorResult.insertedId,
+  title: "Fearless",
+  releaseDate: new Date("2008-11-11"),
+  cover: "https://upload.wikimedia.org/wikipedia/en/b/b8/Taylor_Swift_-_Fearless.png",
+});
+
+// Shake It Off
+db.songs.insertOne({
+  artistId: taylorResult.insertedId,
+  albumId: album1989Result.insertedId,
+  title: "Shake It Off",
+  releaseDate: new Date("2014-08-18"),
+  length: "00:03:39",
+  position: 1,
+});
+
+// Blank Space
+db.songs.insertOne({
+  artistId: taylorResult.insertedId,
+  albumId: album1989Result.insertedId,
+  title: "Blank Space",
+  releaseDate: new Date("2014-11-10"),
+  length: "00:03:51",
+  position: 2,
+});
+
+// Love Story
+db.songs.insertOne({
+  artistId: taylorResult.insertedId,
+  albumId: albumFearlessResult.insertedId,
+  title: "Love Story",
+  releaseDate: new Date("2008-09-12"),
+  length: "00:03:54",
+  position: 1,
+});
+
+db.artists.find();
+db.albums.find();
+db.songs.find();
+
+
+const taylor = db.artists.findOne({name:"Taylor Swift"});
+db.albums.find({artistId:taylor._id});
+db.songs.find({artistId:taylor._id});
+
+
+
+
+// Aggregate for at hente alle albums med tilhørende sange
+db.albums.aggregate([
+  {
+    $lookup: {
+      from: "songs",
+      localField: "_id",
+      foreignField: "albumId",
+      as: "songs"
+    }
+  }
+])
+
+// Aggregate for at hente alle songs med artist info
+db.songs.aggregate([
+  {
+    $lookup: {
+      from: "artists",
+      localField: "artistId",
+      foreignField: "_id",
+      as: "artistInfo"
+    }
+  }
+])
+
+db.songs.aggregate([
+  {
+    $lookup: {
+      from: "artists",
+      localField: "artistId",
+      foreignField: "_id",
+      as: "artistInfo"
+    }
+  },
+  {
+    $unwind: "$artistInfo"
+  }
+])
+
+// Aggregate for at hente alle sange med tilhørende kunstneroplysninger i en flad struktur med alle felter på samme niveau
+db.songs.aggregate([
+  {
+    $lookup: {
+      from: "artists",
+      localField: "artistId",
+      foreignField: "_id",
+      as: "artistInfo"
+    }
+  },
+  {
+    $unwind: "$artistInfo"
+  },
+  {
+    $project: {
+      _id: 1,
+      title: 1,
+      releaseDate: 1,
+      length: 1,
+      position: 1,
+      artistId: 1,
+      artistName: "$artistInfo.name",
+      artistGenre: "$artistInfo.genre",
+      artistImage: "$artistInfo.image",
+      artistBirthdate: "$artistInfo.birthdate",
+      artistGender: "$artistInfo.gender"
+    }
+  }
+])
+
+
+
+// ========== Linked Structure many to many ========== //
+db.artists.drop(); // Drop the collection
+db.albums.drop(); // Drop the collection
+db.songs.drop(); // Drop the collection
+
+
+
+// Taylor Swift
+const taylorResult = db.artists.insertOne({
+  name: "Taylor Swift",
+  genre: "Pop",
+  image: "https://example.com/taylor_swift.jpg",
+  birthdate: new Date("1989-12-13"),
+  gender: "Female",
+});
+
+// Ed Sheeran
+const edSheeranResult = db.artists.insertOne({
+  name: "Ed Sheeran",
+  genre: "Pop",
+  image: "https://example.com/ed_sheeran.jpg",
+  birthdate: new Date("1991-02-17"),
+  gender: "Male"
+});
+
+// Love Story
+db.songs.insertOne({
+  artists: [taylorResult.insertedId, edSheeranResult.insertedId],
+  title: "Everything Has Changed",
+  releaseDate: new Date("2013-06-14"),
+  length: "00:04:04",
+  position: 14,
+});
+
+db.songs.aggregate([
+  {
+    $lookup: {
+      from: "artists",
+      localField: "artists",
+      foreignField: "_id",
+      as: "artists"
+    }
+  }
+]);
