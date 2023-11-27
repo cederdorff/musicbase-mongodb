@@ -8,7 +8,8 @@ import { getDatabase } from "./db-connect.js";
 const app = express();
 const port = process.env.SERVER_PORT || 3333;
 app.use(express.json()); // to parse JSON bodies
-app.use(cors());
+app.use(cors()); // Enable CORS for all routes
+const db = await getDatabase(); // Connect to the database
 
 // GET Endpoint "/"
 app.get("/", (request, response) => {
@@ -21,7 +22,6 @@ app.listen(port, async () => {
 
 // GET Endpoint "/artists" - get all artists
 app.get("/artists", async (request, response) => {
-    const db = await getDatabase();
     const artistsCollection = db.collection("artists");
     const artists = await artistsCollection.find().toArray(); // Use toArray() to retrieve documents as an array
     response.json(artists);
@@ -29,7 +29,6 @@ app.get("/artists", async (request, response) => {
 
 app.post("/artists", async (request, response) => {
     const artist = request.body;
-    const db = await getDatabase();
     const result = await db.collection("artists").insertOne(artist);
     response.json(result);
 });
@@ -37,7 +36,6 @@ app.post("/artists", async (request, response) => {
 app.put("/artists/:id", async (request, response) => {
     const id = request.params.id;
     const artist = request.body;
-    const db = await getDatabase();
     const result = await db
         .collection("artists")
         .updateOne({ _id: new ObjectId(id) }, { $set: artist });
@@ -46,7 +44,6 @@ app.put("/artists/:id", async (request, response) => {
 
 app.delete("/artists/:id", async (request, response) => {
     const id = request.params.id;
-    const db = await getDatabase();
     const result = await db
         .collection("artists")
         .deleteOne({ _id: new ObjectId(id) });
@@ -56,7 +53,6 @@ app.delete("/artists/:id", async (request, response) => {
 app.post("/artists/:id/albums", async (request, response) => {
     const id = request.params.id;
     const album = request.body;
-    const db = await getDatabase();
     const result = await db
         .collection("artists")
         .updateOne(
@@ -70,7 +66,6 @@ app.post("/artists/:id/albums", async (request, response) => {
 // Ex: http://localhost:3333/artists/search?q=cy
 app.get("/artists/search", async (request, response) => {
     const searchString = request.query.q;
-    const db = await getDatabase();
     const artistsCollection = db.collection("artists");
 
     const searchQuery = {
@@ -89,7 +84,6 @@ app.get("/artists/search", async (request, response) => {
 // GET Endpoint "/artists/:id" - get one artist
 app.get("/artists/:id", async (request, response) => {
     const id = request.params.id;
-    const db = await getDatabase();
     const artistsCollection = db.collection("artists");
     const artists = await artistsCollection.findOne({
         _id: new ObjectId(id)
@@ -100,8 +94,6 @@ app.get("/artists/:id", async (request, response) => {
 // GET Endpoint "/artists/:id" - get one artist
 app.get("/artists/:id/albums", async (request, response) => {
     const id = request.params.id;
-
-    const db = await getDatabase();
 
     const results = await db
         .collection("artists")
@@ -123,8 +115,6 @@ app.get("/artists/:id/albums", async (request, response) => {
 });
 
 app.get("/albums", async (request, response) => {
-    const db = await getDatabase();
-
     const results = await db
         .collection("artists")
         .aggregate([
@@ -148,8 +138,6 @@ app.get("/albums", async (request, response) => {
 });
 
 app.get("/songs", async (request, response) => {
-    const db = await getDatabase();
-
     const results = await db
         .collection("artists")
         .aggregate([
