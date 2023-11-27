@@ -22,118 +22,24 @@ app.listen(port, async () => {
 // GET Endpoint "/artists" - get all artists
 app.get("/artists", async (request, response) => {
     const db = await getDatabase();
-    const artistsCollection = db.collection("artists");
-    const artists = await artistsCollection.find().toArray(); // Use toArray() to retrieve documents as an array
+    const artists = await db.collection("artists").find().toArray(); // Use toArray() to retrieve documents as an array
     response.json(artists);
-});
-
-// GET Endpoint "/artists/search?q=taylor" - get all artists
-// Ex: http://localhost:3333/artists/search?q=cy
-app.get("/artists/search", async (request, response) => {
-    const searchString = request.query.q;
-    const db = await getDatabase();
-    const artistsCollection = db.collection("artists");
-
-    const searchQuery = {
-        name: {
-            $regex: searchString, // Use the provided search string
-            $options: "i" // Case-insensitive search
-        }
-    };
-
-    const searchResult = await artistsCollection
-        .find(searchQuery)
-        .toArray();
-    response.json(searchResult);
 });
 
 // GET Endpoint "/artists/:id" - get one artist
 app.get("/artists/:id", async (request, response) => {
-    const id = request.params.id;
-    const db = await getDatabase();
-    const artistsCollection = db.collection("artists");
-    const artists = await artistsCollection.findOne({
-        _id: new ObjectId(id)
-    });
-    response.json(artists);
+    // ...
 });
 
 // GET Endpoint "/artists/:id" - get one artist
 app.get("/artists/:id/albums", async (request, response) => {
-    const id = request.params.id;
-
-    const db = await getDatabase();
-
-    const results = await db
-        .collection("artists")
-        .aggregate([
-            { $match: { _id: new ObjectId(id) } },
-            { $unwind: "$albums" },
-            {
-                $project: {
-                    _id: 0,
-                    artist: "$name",
-                    album: "$albums.title",
-                    releaseDate: "$albums.releaseDate"
-                }
-            }
-        ])
-        .toArray();
-
-    response.json(results);
+    // ...
 });
 
 app.get("/albums", async (request, response) => {
-    const db = await getDatabase();
-
-    const results = await db
-        .collection("artists")
-        .aggregate([
-            {
-                $unwind: "$albums"
-            },
-            {
-                $project: {
-                    _id: 0,
-                    artist: "$name",
-                    title: "$albums.title",
-                    releaseDate: "$albums.releaseDate",
-                    cover: "$albums.cover",
-                    songs: "$albums.songs"
-                }
-            }
-        ])
-        .toArray();
-
-    response.json(results);
+    // ...
 });
 
 app.get("/songs", async (request, response) => {
-    const db = await getDatabase();
-
-    const results = await db
-        .collection("artists")
-        .aggregate([
-            {
-                $unwind: "$albums"
-            },
-            {
-                $unwind: "$albums.songs"
-            },
-            {
-                $project: {
-                    _id: 0,
-                    artist: "$name",
-                    albumTitle: "$albums.title",
-                    albumCover: "$albums.cover",
-                    songTitle: "$albums.songs.title",
-                    songReleaseDate: "$albums.songs.releaseDate",
-                    songLength: "$albums.songs.length",
-                    songPosition: "$albums.songs.position"
-                }
-            }
-        ])
-        .toArray();
-
-    response.json(results);
+    // ...
 });
