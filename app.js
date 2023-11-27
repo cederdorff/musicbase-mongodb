@@ -1,7 +1,6 @@
 // ========== IMPORTS ========== //
 import cors from "cors";
 import express from "express";
-import { ObjectId } from "mongodb";
 import { getDatabase } from "./db-connect.js";
 
 // ========== APP SETUP ========== //
