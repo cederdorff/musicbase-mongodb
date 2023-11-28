@@ -66,7 +66,6 @@ app.post("/artists/:id/albums", async (request, response) => {
 // Ex: http://localhost:3333/artists/search?q=cy
 app.get("/artists/search", async (request, response) => {
     const searchString = request.query.q;
-    const artistsCollection = db.collection("artists");
 
     const searchQuery = {
         name: {
@@ -75,7 +74,8 @@ app.get("/artists/search", async (request, response) => {
         }
     };
 
-    const searchResult = await artistsCollection
+    const searchResult = await db
+        .collection("artists")
         .find(searchQuery)
         .toArray();
     response.json(searchResult);
