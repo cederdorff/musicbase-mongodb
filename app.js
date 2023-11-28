@@ -54,11 +54,8 @@ app.post("/artists/:id/albums", async (request, response) => {
     const id = request.params.id;
     const album = request.body;
     const result = await db
-        .collection("artists")
-        .updateOne(
-            { _id: new ObjectId(id) },
-            { $push: { albums: album } }
-        );
+        .collection("albums")
+        .insertOne({ ...album, artistId: new ObjectId(id) });
     response.json(result);
 });
 
@@ -91,44 +88,46 @@ app.get("/artists/:id", async (request, response) => {
     response.json(artists);
 });
 
-// GET Endpoint "/artists/:id" - get one artist
+// GET Endpoint "/artists/:id/albums" - get all albums for one artist
 app.get("/artists/:id/albums", async (request, response) => {
     const id = request.params.id;
-
     const results = await db
-        .collection("artists")
-        .aggregate([
-            { $match: { _id: new ObjectId(id) } },
-            { $unwind: "$albums" },
-            {
-                $project: {
-                    _id: 0,
-                    artist: "$name",
-                    album: "$albums.title",
-                    releaseDate: "$albums.releaseDate"
-                }
-            }
-        ])
+        .collection("albums")
+        .find({ artistId: new ObjectId(id) })
         .toArray();
 
     response.json(results);
 });
 
+// GET Endpoint "/artists/:id/songs" - get all songs for one artist
+app.get("/artists/:id/songs", async (request, response) => {
+    const id = request.params.id;
+    const results = await db
+        .collection("songs")
+        .find({ artistId: new ObjectId(id) })
+        .toArray();
+
+    response.json(results);
+});
+
+// GET Endpoint "/albums" - get all albums
 app.get("/albums", async (request, response) => {
+    const results = await db.collection("albums").find().toArray();
+
+    response.json(results);
+});
+
+// GET Endpoint "/albums/albums" - get all albums with songs
+app.get("/albums/songs", async (request, response) => {
     const results = await db
-        .collection("artists")
+        .collection("albums")
         .aggregate([
             {
-                $unwind: "$albums"
-            },
-            {
-                $project: {
-                    _id: 0,
-                    artist: "$name",
-                    title: "$albums.title",
-                    releaseDate: "$albums.releaseDate",
-                    cover: "$albums.cover",
-                    songs: "$albums.songs"
+                $lookup: {
+                    from: "songs",
+                    localField: "_id",
+                    foreignField: "albumId",
+                    as: "songs"
                 }
             }
         ])
@@ -137,30 +136,28 @@ app.get("/albums", async (request, response) => {
     response.json(results);
 });
 
+// GET Endpoint "/songs" - get all songs
 app.get("/songs", async (request, response) => {
+    const results = await db.collection("songs").find().toArray();
+    response.json(results);
+});
+
+app.get("/songs/artists", async (request, response) => {
     const results = await db
-        .collection("artists")
+        .collection("songs")
         .aggregate([
             {
-                $unwind: "$albums"
-            },
-            {
-                $unwind: "$albums.songs"
-            },
-            {
-                $project: {
-                    _id: 0,
-                    artist: "$name",
-                    albumTitle: "$albums.title",
-                    albumCover: "$albums.cover",
-                    songTitle: "$albums.songs.title",
-                    songReleaseDate: "$albums.songs.releaseDate",
-                    songLength: "$albums.songs.length",
-                    songPosition: "$albums.songs.position"
+                $lookup: {
+                    from: "artists",
+                    localField: "artistId",
+                    foreignField: "_id",
+                    as: "artist"
                 }
+            },
+            {
+                $unwind: "$artist"
             }
         ])
         .toArray();
-
     response.json(results);
 });
