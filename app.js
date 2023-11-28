@@ -14,10 +14,10 @@ initMongoose();
 // ========== SCHEMAS & MODELS ========== //
 
 const artistSchema = new mongoose.Schema({
-    name: String,
+    name: { type: String, required: true },
     genre: String,
     image: String,
-    birthdate: Date,
+    birthdate: { type: Date, default: Date.now },
     gender: String
 });
 
@@ -69,5 +69,18 @@ app.get("/artists/:id", async (request, response) => {
 app.post("/artists", async (request, response) => {
     const artist = new Artist(request.body);
     const result = await artist.save();
+    response.json(result);
+});
+
+// PUT Endpoint "/artists/:id" - update one artist
+app.put("/artists/:id", async (request, response) => {
+    const artist = await Artist.findById(request.params.id);
+    artist.set(request.body);
+    const result = await artist.save();
+    response.json(result);
+});
+
+app.delete("/artists/:id", async (request, response) => {
+    const result = await Artist.deleteOne({ _id: request.params.id });
     response.json(result);
 });
