@@ -11,6 +11,14 @@ app.use(express.json()); // to parse JSON bodies
 app.use(cors());
 initMongoose();
 
+// ========== DATABASE SETUP ========== //
+// Reset the existing "artists," "albums," and "songs" collections
+// NOTE: This will delete all data in the database
+// const collections = (await mongoose.connection.db.listCollections().toArray()).map(collection => collection.name); // Get all collection names
+await mongoose.connection.dropCollection("artists"); // Drop the "artists" collection if it exists
+await mongoose.connection.dropCollection("albums"); // Drop the "albums" collection if it exists
+await mongoose.connection.dropCollection("songs"); // Drop the "songs" collection if it exists
+
 // ========== SCHEMAS & MODELS ========== //
 
 // Create a Mongoose schema for the "artists" collection
@@ -33,7 +41,7 @@ const artistSchema = new mongoose.Schema({
         type: String,
         required: [true, "Image of the artist is required and must be a string"],
         match: [
-            /^https?:\/\/[a-zA-Z0-9-._~:/?#[\\]@!$&'()*+,;=]+$/,
+            "/^https?://[a-zA-Z0-9-._~:/?#[\\]@!$&'()*+,;=]+$/",
             "Invalid image URL. Must start with http:// or https://"
         ]
     },
