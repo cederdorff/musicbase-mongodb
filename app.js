@@ -9,15 +9,15 @@ const app = express();
 const port = process.env.SERVER_PORT || 3333;
 app.use(express.json()); // to parse JSON bodies
 app.use(cors());
-initMongoose();
+await initMongoose();
 
 // ========== DATABASE SETUP ========== //
 // Reset the existing "artists," "albums," and "songs" collections
 // NOTE: This will delete all data in the database
-// const collections = (await mongoose.connection.db.listCollections().toArray()).map(collection => collection.name); // Get all collection names
-await mongoose.connection.dropCollection("artists"); // Drop the "artists" collection if it exists
-await mongoose.connection.dropCollection("albums"); // Drop the "albums" collection if it exists
-await mongoose.connection.dropCollection("songs"); // Drop the "songs" collection if it exists
+const collections = (await mongoose.connection.db.listCollections().toArray()).map(collection => collection.name); // Get all collection names
+if (collections.includes("artists")) await mongoose.connection.dropCollection("artists"); // Drop the "artists" collection if it exists
+if (collections.includes("albums")) await mongoose.connection.dropCollection("albums"); // Drop the "albums" collection if it exists
+if (collections.includes("songs")) await mongoose.connection.dropCollection("songs"); // Drop the "songs" collection if it exists
 
 // ========== SCHEMAS & MODELS ========== //
 
@@ -40,10 +40,7 @@ const artistSchema = new mongoose.Schema({
     image: {
         type: String,
         required: [true, "Image of the artist is required and must be a string"],
-        match: [
-            "/^https?://[a-zA-Z0-9-._~:/?#[\\]@!$&'()*+,;=]+$/",
-            "Invalid image URL. Must start with http:// or https://"
-        ]
+        minlength: [4, "Image must be at least 4 character long"]
     },
     birthdate: {
         type: Date,
