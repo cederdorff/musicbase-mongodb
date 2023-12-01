@@ -13,12 +13,42 @@ initMongoose();
 
 // ========== SCHEMAS & MODELS ========== //
 
+// Create a Mongoose schema for the "artists" collection
 const artistSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    genre: String,
-    image: String,
-    birthdate: { type: Date, default: Date.now },
-    gender: String
+    name: {
+        type: String,
+        required: [true, "Name of the artist is required and must be a string"],
+        minlength: [1, "Name must be at least 1 character long"],
+        maxlength: [255, "Name cannot exceed 255 characters"]
+    },
+    genre: {
+        type: String,
+        required: [true, "Genre of the artist is required and must be a string"],
+        enum: {
+            values: ["Pop", "Rock", "Hip-Hop", "Country", "Other"],
+            message: "Invalid genre. Must be one of: Pop, Rock, Hip-Hop, Country, Other"
+        }
+    },
+    image: {
+        type: String,
+        required: [true, "Image of the artist is required and must be a string"],
+        match: [
+            /^https?:\/\/[a-zA-Z0-9-._~:/?#[\\]@!$&'()*+,;=]+$/,
+            "Invalid image URL. Must start with http:// or https://"
+        ]
+    },
+    birthdate: {
+        type: Date,
+        required: [true, "Birthdate of the artist is required and must be a date"]
+    },
+    gender: {
+        type: String,
+        required: [true, "Gender of the artist is required and must be a string"],
+        enum: {
+            values: ["Male", "Female", "Non-Binary", "Other"],
+            message: "Invalid gender. Must be one of: Male, Female, Non-Binary, Other"
+        }
+    }
 });
 
 const Artist = mongoose.model("Artist", artistSchema);
