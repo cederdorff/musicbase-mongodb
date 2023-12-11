@@ -80,6 +80,7 @@ app.put("/artists/:id", async (request, response) => {
     response.json(result);
 });
 
+// DELETE Endpoint "/artists/:id" - delete one artist
 app.delete("/artists/:id", async (request, response) => {
     const result = await Artist.deleteOne({ _id: request.params.id });
     response.json(result);
