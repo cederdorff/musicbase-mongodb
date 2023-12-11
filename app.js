@@ -36,29 +36,20 @@ app.post("/artists", async (request, response) => {
 app.put("/artists/:id", async (request, response) => {
     const id = request.params.id;
     const artist = request.body;
-    const result = await db
-        .collection("artists")
-        .updateOne({ _id: new ObjectId(id) }, { $set: artist });
+    const result = await db.collection("artists").updateOne({ _id: new ObjectId(id) }, { $set: artist });
     response.json(result);
 });
 
 app.delete("/artists/:id", async (request, response) => {
     const id = request.params.id;
-    const result = await db
-        .collection("artists")
-        .deleteOne({ _id: new ObjectId(id) });
+    const result = await db.collection("artists").deleteOne({ _id: new ObjectId(id) });
     response.json(result);
 });
 
 app.post("/artists/:id/albums", async (request, response) => {
     const id = request.params.id;
     const album = request.body;
-    const result = await db
-        .collection("artists")
-        .updateOne(
-            { _id: new ObjectId(id) },
-            { $push: { albums: album } }
-        );
+    const result = await db.collection("artists").updateOne({ _id: new ObjectId(id) }, { $push: { albums: album } });
     response.json(result);
 });
 
@@ -74,10 +65,7 @@ app.get("/artists/search", async (request, response) => {
         }
     };
 
-    const searchResult = await db
-        .collection("artists")
-        .find(searchQuery)
-        .toArray();
+    const searchResult = await db.collection("artists").find(searchQuery).toArray();
     response.json(searchResult);
 });
 
