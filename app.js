@@ -123,6 +123,7 @@ app.listen(port, async () => {
 });
 
 // ========== ENDPOINTS ========== //
+
 // GET Endpoint "/"
 app.get("/", (request, response) => {
     response.send("Node Express Musicbase REST API");
@@ -228,7 +229,7 @@ app.get("/albums", async (request, response) => {
     response.json(results);
 });
 
-// GET Endpoint "/albums/albums" - get all albums with songs
+// GET Endpoint "/albums/songs" - get all albums with songs
 app.get("/albums/songs", async (request, response) => {
     const results = await db
         .collection("albums")
