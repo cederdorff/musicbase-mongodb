@@ -1,66 +1,62 @@
 // ========== IMPORTS ========== //
-import cors from "cors";
-import express from "express";
-import { ObjectId } from "mongodb";
-import { getDatabase } from "./db-connect.js";
+import cors from "cors"; // Enable cross-origin resource sharing for API requests
+import express from "express"; // Create an Express application for handling HTTP requests
+import { ObjectId } from "mongodb"; // Handle MongoDB's unique ObjectID data type
+import { getDatabase } from "./db-connect.js"; // Load database connection function
 
 // ========== APP SETUP ========== //
-const app = express();
-const port = process.env.SERVER_PORT || 3333;
-app.use(express.json()); // to parse JSON bodies
+const app = express(); // Create an Express application instance
+const port = process.env.SERVER_PORT || 3333; // Set the port if not defined in environment variable
+
+app.use(express.json()); // Parse JSON data from requests
 app.use(cors()); // Enable CORS for all routes
-const db = await getDatabase(); // Connect to the database
+
+const db = await getDatabase(); // Connect to the MongoDB database
 
 // GET Endpoint "/"
 app.get("/", (request, response) => {
-    response.send("Node Express Musicbase REST API");
+    response.send("Node Express Musicbase REST API"); // Send a welcome message
 });
 
 app.listen(port, async () => {
-    console.log(`App listening on http://localhost:${port}`);
+    console.log(`App listening on http://localhost:${port}`); // Log the application's listening port
 });
 
-// GET Endpoint "/artists" - get all artists
+// GET Endpoint "/artists" - Get all artists
 app.get("/artists", async (request, response) => {
-    const artistsCollection = db.collection("artists");
-    const artists = await artistsCollection.find().toArray(); // Use toArray() to retrieve documents as an array
-    response.json(artists);
+    const artists = await db.collection("artists").find().toArray(); // Retrieve all artists from the 'artists' collection
+    response.json(artists); // Send the retrieved artists as JSON to the client
 });
 
-// GET Endpoint "/artists/:id" - get one artist
+// GET Endpoint "/artists/:id" - Get one artist by ID
 app.get("/artists/:id", async (request, response) => {
-    const id = request.params.id;
-    const artistsCollection = db.collection("artists");
-    const artists = await artistsCollection.findOne({
+    const id = request.params.id; // Extract the artist ID from the URL path
+    const artist = await db.collection("artists").findOne({
         _id: new ObjectId(id)
-    });
-    response.json(artists);
+    }); // Retrieve the artist with the specified ID
+    response.json(artist); // Send the retrieved artist as JSON to the client
 });
 
-// POST Endpoint "/artists" - create one artist
+// POST Endpoint "/artists" - Create a new artist
 app.post("/artists", async (request, response) => {
-    const artist = request.body;
-    const result = await db.collection("artists").insertOne(artist);
-    response.json(result);
+    const artist = request.body; // Retrieve the artist data from the request body
+    const result = await db.collection("artists").insertOne(artist); // Insert the artist document into the 'artists' collection
+    response.json(result); // Send the insertion result as JSON to the client
 });
 
-// PUT Endpoint "/artists/:id" - update one artist
+// PUT Endpoint "/artists/:id" - Update an artist by ID
 app.put("/artists/:id", async (request, response) => {
-    const id = request.params.id;
-    const artist = request.body;
-    const result = await db
-        .collection("artists")
-        .updateOne({ _id: new ObjectId(id) }, { $set: artist });
-    response.json(result);
+    const id = request.params.id; // Extract the artist ID from the URL path
+    const artist = request.body; // Retrieve the updated artist data from the request body
+    const result = await db.collection("artists").updateOne({ _id: new ObjectId(id) }, { $set: artist }); // Update the artist document with the provided data
+    response.json(result); // Send the update result as JSON to the client
 });
 
-// DELETE Endpoint "/artists/:id" - delete one artist
+// DELETE Endpoint "/artists/:id" - Delete an artist by ID
 app.delete("/artists/:id", async (request, response) => {
-    const id = request.params.id;
-    const result = await db
-        .collection("artists")
-        .deleteOne({ _id: new ObjectId(id) });
-    response.json(result);
+    const id = request.params.id; // Extract the artist ID from the URL path
+    const result = await db.collection("artists").deleteOne({ _id: new ObjectId(id) }); // Delete the artist document with the specified ID
+    response.json(result); // Send the deletion result as JSON to the client
 });
 
 // GET Endpoint "/artists/search?q=taylor" - get all artists
@@ -75,10 +71,7 @@ app.get("/artists/search", async (request, response) => {
         }
     };
 
-    const searchResult = await db
-        .collection("artists")
-        .find(searchQuery)
-        .toArray();
+    const searchResult = await db.collection("artists").find(searchQuery).toArray();
     response.json(searchResult);
 });
 
@@ -97,9 +90,7 @@ app.get("/artists/:id/albums", async (request, response) => {
 app.post("/artists/:id/albums", async (request, response) => {
     const id = request.params.id;
     const album = request.body;
-    const result = await db
-        .collection("albums")
-        .insertOne({ ...album, artistId: new ObjectId(id) });
+    const result = await db.collection("albums").insertOne({ ...album, artistId: new ObjectId(id) });
     response.json(result);
 });
 
@@ -118,9 +109,7 @@ app.get("/artists/:id/songs", async (request, response) => {
 app.post("/artists/:id/songs", async (request, response) => {
     const id = request.params.id;
     const song = request.body;
-    const result = await db
-        .collection("songs")
-        .insertOne({ ...song, artistId: new ObjectId(id) });
+    const result = await db.collection("songs").insertOne({ ...song, artistId: new ObjectId(id) });
     response.json(result);
 });
 
@@ -188,17 +177,13 @@ app.post("/songs", async (request, response) => {
 app.put("/songs/:id", async (request, response) => {
     const id = request.params.id;
     const song = request.body;
-    const result = await db
-        .collection("songs")
-        .updateOne({ _id: new ObjectId(id) }, { $set: song });
+    const result = await db.collection("songs").updateOne({ _id: new ObjectId(id) }, { $set: song });
     response.json(result);
 });
 
 // DELETE Endpoint "/songs/:id" - delete one song
 app.delete("/songs/:id", async (request, response) => {
     const id = request.params.id;
-    const result = await db
-        .collection("songs")
-        .deleteOne({ _id: new ObjectId(id) });
+    const result = await db.collection("songs").deleteOne({ _id: new ObjectId(id) });
     response.json(result);
 });
