@@ -1,59 +1,62 @@
-use music_db
+use("music_db");
 
 // Create artists collection
-db.createCollection("artists")
+db.createCollection("artists");
 
 // Insert data into artists collection
 db.artists.insertMany([
   {
-    name: 'Adele',
-    genre: 'Pop',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/5/52/Adele_for_Vogue_in_2021.png',
-    birthdate: ISODate('1988-05-05'),
-    gender: 'Female'
+    name: "Adele",
+    genre: "Pop",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/52/Adele_for_Vogue_in_2021.png",
+    birthdate: ISODate("1988-05-05"),
+    gender: "Female"
   },
   {
-    name: 'Ed Sheeran',
-    genre: 'Pop',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Ed_Sheeran-6886_%28cropped%29.jpg/500px-Ed_Sheeran-6886_%28cropped%29.jpg',
-    birthdate: ISODate('1991-02-17'),
-    gender: 'Male'
+    name: "Ed Sheeran",
+    genre: "Pop",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Ed_Sheeran-6886_%28cropped%29.jpg/500px-Ed_Sheeran-6886_%28cropped%29.jpg",
+    birthdate: ISODate("1991-02-17"),
+    gender: "Male"
   },
   {
-    name: 'Beyoncé',
-    genre: 'R&B',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png/500px-Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png',
-    birthdate: ISODate('1981-09-04'),
-    gender: 'Female'
+    name: "Beyoncé",
+    genre: "R&B",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png/500px-Beyonc%C3%A9_at_The_Lion_King_European_Premiere_2019.png",
+    birthdate: ISODate("1981-09-04"),
+    gender: "Female"
   },
   {
-    name: 'Miley Cyrus',
-    genre: 'Pop',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Miley_Cyrus_Primavera19_-226_%2848986293772%29_%28cropped%29.jpg/500px-Miley_Cyrus_Primavera19_-226_%2848986293772%29_%28cropped%29.jpg',
-    birthdate: ISODate('1992-11-23'),
-    gender: 'Female'
+    name: "Miley Cyrus",
+    genre: "Pop",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Miley_Cyrus_Primavera19_-226_%2848986293772%29_%28cropped%29.jpg/500px-Miley_Cyrus_Primavera19_-226_%2848986293772%29_%28cropped%29.jpg",
+    birthdate: ISODate("1992-11-23"),
+    gender: "Female"
   },
   {
-    name: 'Ariana Grande',
-    genre: 'Pop',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Ariana_Grande_by_Marcus_Ingvarsson_%28SWE%29_%28cropped%29.png/500px-Ariana_Grande_by_Marcus_Ingvarsson_%28SWE%29_%28cropped%29.png',
-    birthdate: ISODate('1993-06-26'),
-    gender: 'Female'
+    name: "Ariana Grande",
+    genre: "Pop",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Ariana_Grande_by_Marcus_Ingvarsson_%28SWE%29_%28cropped%29.png/500px-Ariana_Grande_by_Marcus_Ingvarsson_%28SWE%29_%28cropped%29.png",
+    birthdate: ISODate("1993-06-26"),
+    gender: "Female"
   },
   {
-    name: 'Drake',
-    genre: 'Rap',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Drake_2019_by_Glenn_Francis_%28cropped%29.jpg/500px-Drake_2019_by_Glenn_Francis_%28cropped%29.jpg',
-    birthdate: ISODate('1986-10-24'),
-    gender: 'Male'
+    name: "Drake",
+    genre: "Rap",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Drake_2019_by_Glenn_Francis_%28cropped%29.jpg/500px-Drake_2019_by_Glenn_Francis_%28cropped%29.jpg",
+    birthdate: ISODate("1986-10-24"),
+    gender: "Male"
   }
-])
+]);
 
+db.artists.find();
 
-db.artists.find()
-
-db.artists.createIndex({name:"text"})
-
+db.artists.createIndex({ name: "text" });
 
 // ========== Embedded Structure - One to many ========== //
 
@@ -79,16 +82,16 @@ db.artists.insertOne({
           title: "Shape of You",
           releaseDate: new Date("2017-01-06"),
           length: "00:03:54",
-          position: 1,
+          position: 1
         },
         {
           _id: ObjectId(), // Generate a unique ID for the song
           title: "Castle on the Hill",
           releaseDate: new Date("2017-01-06"),
           length: "00:04:21",
-          position: 2,
-        },
-      ],
+          position: 2
+        }
+      ]
     },
     {
       _id: ObjectId(), // Generate a unique ID for the album
@@ -101,11 +104,11 @@ db.artists.insertOne({
           title: "Photograph",
           releaseDate: new Date("2015-05-11"),
           length: "00:04:18",
-          position: 1,
-        },
-      ],
-    },
-  ],
+          position: 1
+        }
+      ]
+    }
+  ]
 });
 
 // Adele
@@ -128,23 +131,23 @@ db.artists.insertMany([
             title: "Easy On Me",
             releaseDate: new Date("2021-10-15"),
             length: "00:03:44",
-            position: 1,
+            position: 1
           },
           {
             _id: ObjectId(),
             title: "My Little Love",
             releaseDate: new Date("2021-11-19"),
             length: "00:06:26",
-            position: 2,
+            position: 2
           },
           {
             _id: ObjectId(),
             title: "Oh My God",
             releaseDate: new Date("2021-11-19"),
             length: "00:04:10",
-            position: 3,
-          },
-        ],
+            position: 3
+          }
+        ]
       },
       {
         _id: ObjectId(),
@@ -157,16 +160,16 @@ db.artists.insertMany([
             title: "Hello",
             releaseDate: new Date("2015-10-23"),
             length: "00:04:55",
-            position: 1,
+            position: 1
           },
           {
             _id: ObjectId(),
             title: "When We Were Young",
             releaseDate: new Date("2015-11-22"),
             length: "00:04:51",
-            position: 2,
-          },
-        ],
+            position: 2
+          }
+        ]
       },
       {
         _id: ObjectId(),
@@ -179,11 +182,11 @@ db.artists.insertMany([
             title: "Rolling in the Deep",
             releaseDate: new Date("2010-11-29"),
             length: "00:03:49",
-            position: 1,
-          },
-        ],
-      },
-    ],
+            position: 1
+          }
+        ]
+      }
+    ]
   }
 ]);
 
@@ -206,16 +209,16 @@ db.artists.insertOne({
           title: "Shake It Off",
           releaseDate: new Date("2014-08-18"),
           length: "00:03:39",
-          position: 1,
+          position: 1
         },
         {
           _id: ObjectId(),
           title: "Blank Space",
           releaseDate: new Date("2014-11-10"),
           length: "00:03:51",
-          position: 2,
-        },
-      ],
+          position: 2
+        }
+      ]
     },
     {
       _id: ObjectId(),
@@ -228,14 +231,14 @@ db.artists.insertOne({
           title: "Love Story",
           releaseDate: new Date("2008-09-12"),
           length: "00:03:54",
-          position: 1,
-        },
-      ],
-    },
-  ],
+          position: 1
+        }
+      ]
+    }
+  ]
 });
 
-db.artists.find()
+db.artists.find();
 
 // Aggregate to get all songs for the specified artist
 db.artists.aggregate([
@@ -250,9 +253,9 @@ db.artists.aggregate([
       title: "$albums.songs.title",
       releaseDate: "$albums.songs.releaseDate",
       length: "$albums.songs.length",
-      position: "$albums.songs.position",
-    },
-  },
+      position: "$albums.songs.position"
+    }
+  }
 ]);
 
 // Aggregate to get all albums for the specified artist
@@ -264,9 +267,9 @@ db.artists.aggregate([
       _id: 0,
       artist: "$name",
       album: "$albums.title",
-      releaseDate: "$albums.releaseDate",
-    },
-  },
+      releaseDate: "$albums.releaseDate"
+    }
+  }
 ]);
 
 // Aggregate to get all albums for all artists
@@ -274,14 +277,14 @@ db.artists.aggregate([
   {
     $unwind: "$albums"
   }
-])
+]);
 
 // Aggregate to get all albums for all artists
 db.artists.aggregate([
   {
     $unwind: "$albums.songs"
   }
-])
+]);
 
 // Aggregate to get all albums for all artists
 db.artists.aggregate([
@@ -298,8 +301,7 @@ db.artists.aggregate([
       songs: "$albums.songs"
     }
   }
-])
-
+]);
 
 // Aggregate to get all songs for all albums and artists
 db.artists.aggregate([
@@ -309,8 +311,7 @@ db.artists.aggregate([
   {
     $unwind: "$albums.songs"
   }
-])
-
+]);
 
 // Aggregate to get all songs for all albums and artists
 db.artists.aggregate([
@@ -332,9 +333,7 @@ db.artists.aggregate([
       songPosition: "$albums.songs.position"
     }
   }
-])
-
-
+]);
 
 // ========== Linked Structure - One to many ========== //
 
@@ -346,7 +345,7 @@ const taylorResult = db.artists.insertOne({
   genre: "Pop",
   image: "https://example.com/taylor_swift.jpg",
   birthdate: new Date("1989-12-13"),
-  gender: "Female",
+  gender: "Female"
 });
 
 // 1989
@@ -354,7 +353,7 @@ const album1989Result = db.albums.insertOne({
   artistId: taylorResult.insertedId,
   title: "1989",
   releaseDate: new Date("2014-10-27"),
-  cover: "https://upload.wikimedia.org/wikipedia/en/f/f6/Taylor_Swift_-_1989.png",
+  cover: "https://upload.wikimedia.org/wikipedia/en/f/f6/Taylor_Swift_-_1989.png"
 });
 
 // Fearless
@@ -362,7 +361,7 @@ const albumFearlessResult = db.albums.insertOne({
   artistId: taylorResult.insertedId,
   title: "Fearless",
   releaseDate: new Date("2008-11-11"),
-  cover: "https://upload.wikimedia.org/wikipedia/en/b/b8/Taylor_Swift_-_Fearless.png",
+  cover: "https://upload.wikimedia.org/wikipedia/en/b/b8/Taylor_Swift_-_Fearless.png"
 });
 
 // Shake It Off
@@ -372,7 +371,7 @@ db.songs.insertOne({
   title: "Shake It Off",
   releaseDate: new Date("2014-08-18"),
   length: "00:03:39",
-  position: 1,
+  position: 1
 });
 
 // Blank Space
@@ -382,7 +381,7 @@ db.songs.insertOne({
   title: "Blank Space",
   releaseDate: new Date("2014-11-10"),
   length: "00:03:51",
-  position: 2,
+  position: 2
 });
 
 // Love Story
@@ -392,20 +391,16 @@ db.songs.insertOne({
   title: "Love Story",
   releaseDate: new Date("2008-09-12"),
   length: "00:03:54",
-  position: 1,
+  position: 1
 });
 
 db.artists.find();
 db.albums.find();
 db.songs.find();
 
-
-const taylor = db.artists.findOne({name:"Taylor Swift"});
-db.albums.find({artistId:taylor._id});
-db.songs.find({artistId:taylor._id});
-
-
-
+const taylor = db.artists.findOne({ name: "Taylor Swift" });
+db.albums.find({ artistId: taylor._id });
+db.songs.find({ artistId: taylor._id });
 
 // Aggregate for at hente alle albums med tilhørende sange
 db.albums.aggregate([
@@ -417,7 +412,7 @@ db.albums.aggregate([
       as: "songs"
     }
   }
-])
+]);
 
 // Aggregate for at hente alle songs med artist info
 db.songs.aggregate([
@@ -429,7 +424,7 @@ db.songs.aggregate([
       as: "artistInfo"
     }
   }
-])
+]);
 
 db.songs.aggregate([
   {
@@ -443,7 +438,7 @@ db.songs.aggregate([
   {
     $unwind: "$artistInfo"
   }
-])
+]);
 
 // Aggregate for at hente alle sange med tilhørende kunstneroplysninger i en flad struktur med alle felter på samme niveau
 db.songs.aggregate([
@@ -473,16 +468,12 @@ db.songs.aggregate([
       artistGender: "$artistInfo.gender"
     }
   }
-])
-
-
+]);
 
 // ========== Linked Structure many to many ========== //
 db.artists.drop(); // Drop the collection
 db.albums.drop(); // Drop the collection
 db.songs.drop(); // Drop the collection
-
-
 
 // Taylor Swift
 const taylorResult = db.artists.insertOne({
@@ -490,7 +481,7 @@ const taylorResult = db.artists.insertOne({
   genre: "Pop",
   image: "https://example.com/taylor_swift.jpg",
   birthdate: new Date("1989-12-13"),
-  gender: "Female",
+  gender: "Female"
 });
 
 // Ed Sheeran
@@ -508,7 +499,7 @@ db.songs.insertOne({
   title: "Everything Has Changed",
   releaseDate: new Date("2013-06-14"),
   length: "00:04:04",
-  position: 14,
+  position: 14
 });
 
 db.songs.aggregate([
